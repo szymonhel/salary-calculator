@@ -1,6 +1,6 @@
 <script>
-    import {differenceInBusinessDays, getDaysInMonth} from 'date-fns'
-
+    import {differenceInBusinessDays} from 'date-fns'
+    const SALARY_LOCAL_STORAGE_KEY = 'salary_value';
     let salary = localStorage.getItem(SALARY_LOCAL_STORAGE_KEY) ?? 0;
 
     let daysInMonth;
@@ -17,7 +17,7 @@
     let invoice = 0;
     let calculated = false;
 
-    const SALARY_LOCAL_STORAGE_KEY = 'salary_value';
+
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
@@ -26,9 +26,11 @@
     let month = currentDate.getMonth();
 
     function calculateDaysInMonth() {
+        const from = new Date(currentDate.getFullYear(), month, 1);
+        const to = new Date(currentDate.getFullYear(), month + 1, 1);
+
         return differenceInBusinessDays(
-            new Date(currentDate.getFullYear(), month, getDaysInMonth(new Date(currentDate.getFullYear(), month))),
-            new Date(currentDate.getFullYear(), month, 1)
+            to, from
         );
     }
 
@@ -39,7 +41,7 @@
     function calculate() {
         calculated = false;
         alertMessage = '';
-        if (holidays < 0 || holidays > daysInMonth) {
+        if ((holidays ?? 0) < 0 || holidays > daysInMonth) {
             alertMessage = 'Holidays cannot be greater than days in the month'
             return;
         }
